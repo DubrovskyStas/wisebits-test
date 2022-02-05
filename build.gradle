@@ -1,0 +1,54 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+sourceCompatibility = '11'
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+processResources {
+    filesMatching('*.yml') {
+        expand(project.properties)
+    }
+}
+
+configurations {
+    [apiElements, runtimeElements].each {
+        it.outgoing.artifacts.removeIf {
+            it.buildDependencies.getDependencies(null).contains(jar)
+        }
+        it.outgoing.artifact(bootJar)
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'io.springfox:springfox-bean-validators:3.0.0'
+    implementation 'commons-logging:commons-logging:1.2'
+    implementation 'com.neovisionaries:nv-i18n:1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.3'
+    implementation 'com.h2database:h2:2.1.210'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation 'org.mockito:mockito-inline:2.7.21'
+}
+
+test {
+    useJUnitPlatform()
+}
