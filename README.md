@@ -11,9 +11,7 @@ Go to directory with a project and run command
 
 #### Increment example
 ```
-curl --location --request POST 'http://localhost:8087/v1/increment' \
---header 'Content-Type: application/json' \
---data-raw '{"countryCode": "CY"}'
+curl --location --request POST 'http://localhost:8087/v1/increment' --header 'Content-Type: application/json' --data-raw '{"countryCode": "CY"}'
 ```
 
 #### Get info example
