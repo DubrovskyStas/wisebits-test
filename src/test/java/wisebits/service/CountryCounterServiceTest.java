@@ -2,6 +2,7 @@ package wisebits.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -26,8 +27,9 @@ public class CountryCounterServiceTest {
     @Test
     public void check_increment() {
         //given
+        ArgumentCaptor<CountryCounterEntity> captor = ArgumentCaptor.forClass(CountryCounterEntity.class);
         UUID mockUuid = UUID.randomUUID();
-        CountryCounterEntity entity = new CountryCounterEntity()
+        CountryCounterEntity expectedEntity = new CountryCounterEntity()
                 .setId(mockUuid.toString())
                 .setCountry("RU");
 
@@ -38,7 +40,12 @@ public class CountryCounterServiceTest {
             countryCounterService.increment("RU");
 
             //then
-            verify(countryCounterRepository).save(entity);
+            verify(countryCounterRepository).save(captor.capture());
+
+            var actualEntity = captor.getValue();
+
+            assertEquals(expectedEntity.getCountry(), actualEntity.getCountry());
+            assertEquals(expectedEntity.getId(), actualEntity.getId());
         }
     }
 
